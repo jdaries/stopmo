@@ -7,7 +7,7 @@ IMG_DIR = "/home/pi/Documents/stopmo_files"
 PROJECT = "testing"
 
 button = Button(17)
-camera = PiCamera()
+
 
 
 def load_overlay(cur_frame):
@@ -22,10 +22,13 @@ def load_overlay(cur_frame):
     return img, pad
 
 
+camera = PiCamera()
 camera.start_preview()
 frame = 1
 while True:
     if frame > 1:
+        camera = PiCamera()
+        camera.start_preview()
         overlay_img, overlay_pad = load_overlay(frame)
         o = camera.add_overlay(overlay_pad.tobytes(), size=overlay_img.size)
         o.alpha = 128
