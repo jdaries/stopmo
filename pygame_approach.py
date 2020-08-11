@@ -48,7 +48,7 @@ while True:
         CAMERA.stop_preview()
         frame_display_ghost(WIDTH, HEIGHT, frame)
 
-    CAMERA.start_preview(fullscreen=False, window = (W-WIDTH, 100, WIDTH, HEIGHT))
+    CAMERA.start_preview()
     button.wait_for_press()
     CAMERA.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
     frame += 1
