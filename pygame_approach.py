@@ -50,5 +50,5 @@ while True:
 
     CAMERA.start_preview(fullscreen=False, window = (W-WIDTH, 100, WIDTH, HEIGHT))
     button.wait_for_press()
-    camera.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
+    CAMERA.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
     frame += 1
