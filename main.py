@@ -34,7 +34,7 @@ while True:
         button.wait_for_press()
         camera.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
         frame += 1
-        camera.remove_overlay()
+        camera.remove_overlay(o)
     except KeyboardInterrupt:
         camera.stop_preview()
         break
