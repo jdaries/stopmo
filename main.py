@@ -14,10 +14,7 @@ def load_overlay(cur_frame):
     '''cur_frame: int, number of frame about to be taken
     '''
     img = Image.open('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(cur_frame-1)))
-    pad = Image.new('RGB', (
-        ((img.size[0] + 31) // 32) * 32,
-        ((img.size[1] + 15) // 16) * 16,
-        ))
+    pad = Image.new('RGB', (img.size[0], img.size[1],))
     pad.paste(img, (0, 0))
     return img, pad
 
