@@ -3,26 +3,37 @@ from time import sleep
 from gpiozero import Button
 from PIL import Image
 
-img = Image.open('/home/pi/Documents/stopmo_files/image.jpg')
+IMG_DIR = "/home/pi/Documents/stopmo_files"
+PROJECT = "testing"
 
 button = Button(17)
 camera = PiCamera()
 
-# Create an image padded to the required size with
-# mode 'RGB'
-pad = Image.new('RGB', (
-    ((img.size[0] + 31) // 32) * 32,
-    ((img.size[1] + 15) // 16) * 16,
-    ))
-# Paste the original image into the padded one
-pad.paste(img, (0, 0))
+
+def load_overlay(cur_frame):
+    '''cur_frame: int, number of frame about to be taken
+    '''
+    img = Image.open('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(cur_frame-1)))
+    pad = Image.new('RGB', (
+        ((img.size[0] + 31) // 32) * 32,
+        ((img.size[1] + 15) // 16) * 16,
+        ))
+    pad.paste(img, (0, 0))
+    return img, pad
 
 
-#camera.rotation = 180
 camera.start_preview()
-o = camera.add_overlay(pad.tobytes(), size=img.size)
-o.alpha = 128
-o.layer = 3
-button.wait_for_press()
-camera.capture('/home/pi/Documents/stopmo_files/image2.jpg')
-camera.stop_preview()
+frame = 1
+while True:
+    if frame > 1:
+        overlay_img, overlay_pad = load_overlay(frame)
+        o = camera.add_overlay(pad.tobytes(), size=img.size)
+        o.alpha = 128
+        o.layer = 3
+    try:
+        button.wait_for_press()
+        camera.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
+        frame += 1
+    except KeyboardInterrupt:
+        camera.stop_preview()
+        break
