@@ -25,6 +25,8 @@ def load_overlay(cur_frame):
 camera.start_preview()
 frame = 1
 while True:
+    if frame > 2:
+        camera.remove_overlay(o)
     if frame > 1:
         overlay_img, overlay_pad = load_overlay(frame)
         o = camera.add_overlay(overlay_pad.tobytes(), size=overlay_img.size)
@@ -34,7 +36,6 @@ while True:
         button.wait_for_press()
         camera.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
         frame += 1
-        camera.remove_overlay(o)
     except KeyboardInterrupt:
         camera.stop_preview()
         break
