@@ -78,6 +78,8 @@ exit_app = False
 
 while True:
 
+    CAMERA.start_preview()
+    
     pressed = get_pressed_buttons()
     if pressed == {delete_movie_button}:
         delete_and_quit = True
@@ -96,7 +98,7 @@ while True:
         CAMERA.stop_preview()
         frame_display_ghost(WIDTH, HEIGHT, frame)
 
-    CAMERA.start_preview()
+
 
     if take_picture:
         CAMERA.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
