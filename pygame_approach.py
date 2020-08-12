@@ -71,17 +71,17 @@ frame = 1
 while True:
 
     pressed = get_pressed_buttons()
-    if pressed == set(delete_movie_button):
+    if pressed == {delete_movie_button}:
         delete_and_quit = True
-    elif pressed == set(preview_movie_button):
+    elif pressed == {preview_movie_button}:
         show_preview = True
-    elif pressed == set(delete_frame_button):
+    elif pressed == {delete_frame_button}:
         erase_last_frame = True
-    elif pressed == set(take_picture_button):
+    elif pressed == {take_picture_button}:
         take_picture = True
-    elif pressed == set(save_movie_button):
+    elif pressed == {save_movie_button}:
         make_and_save_movie = True
-    elif pressed == set(exit_program_button):
+    elif pressed == {exit_program_button}:
         exit_app = True
 
     if frame > 1:
