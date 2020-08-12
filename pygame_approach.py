@@ -9,7 +9,32 @@ from picamera import PiCamera
 
 IMG_DIR = "/home/pi/Documents/stopmo_files"
 PROJECT = "testing"
-button = Button(17)
+
+BUTTON_NUMBERS = [2, 3, 4, 17, 27, 22]
+
+# 2 = delete movie
+# 3 = preview movie
+# 4 = delete a frame
+# 17 - take a picture
+# 27 - save movie
+# 22 - exit program
+
+delete_movie_button = 2
+preview_movie_button = 3
+delete_frame_button = 4
+take_picture_button = 17
+save_movie_button = 27
+exit_program_button = 22
+
+
+BUTTONS = {
+    bnum: Button(bnum)
+    for bnum in BUTTON_NUMBERS
+}
+
+
+def get_pressed_buttons():
+    return set([bnum for bnum in BUTTONS if BUTTONS[bnum].is_pressed])[0]
 
 
 def frame_display_ghost(W, H, frame_no):
@@ -44,11 +69,30 @@ CAMERA.resolution = (WIDTH, HEIGHT)
 frame = 1
 
 while True:
-    if frame > 1:
-        CAMERA.stop_preview()
-        frame_display_ghost(WIDTH, HEIGHT, frame)
 
-    CAMERA.start_preview()
-    button.wait_for_press()
-    CAMERA.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
-    frame += 1
+    pressed = get_pressed_buttons()
+    if pressed == delete_movie_button:
+        delete_and_quit = True
+    elif pressed == preview_movie_button:
+        show_preview = True
+    elif pressed == delete_frame_button:
+        erase_last_frame = True
+    elif pressed == take_picture_button:
+        take_picture = True
+    elif pressed == save_movie_button:
+        make_and_save_movie = True
+    elif pressed == exit_program_button:
+        exit_app = True
+
+    try:
+        if frame > 1:
+            CAMERA.stop_preview()
+            frame_display_ghost(WIDTH, HEIGHT, frame)
+
+        CAMERA.start_preview()
+
+        if take_picture:
+            CAMERA.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
+            frame += 1
+        elif exit_app:
+            break
