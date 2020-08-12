@@ -68,6 +68,14 @@ CAMERA.resolution = (WIDTH, HEIGHT)
 
 frame = 1
 
+delete_and_quit = False
+show_preview = False
+erase_last_frame = False
+take_picture = False
+make_and_save_movie = False
+exit_app = False
+
+
 while True:
 
     pressed = get_pressed_buttons()
