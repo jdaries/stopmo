@@ -84,15 +84,15 @@ while True:
     elif pressed == exit_program_button:
         exit_app = True
 
-    try:
-        if frame > 1:
-            CAMERA.stop_preview()
-            frame_display_ghost(WIDTH, HEIGHT, frame)
+    if frame > 1:
+        CAMERA.stop_preview()
+        frame_display_ghost(WIDTH, HEIGHT, frame)
 
-        CAMERA.start_preview()
+    CAMERA.start_preview()
 
-        if take_picture:
-            CAMERA.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
-            frame += 1
-        elif exit_app:
-            break
+    if take_picture:
+        CAMERA.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
+        frame += 1
+    elif exit_app:
+        CAMERA.stop_preview()
+        break
