@@ -59,7 +59,7 @@ frame = 1
 
 def take_picture():
     global frame
-    CAMERA.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame_number)))
+    CAMERA.capture('{}/{}/frame_{}.jpg'.format(IMG_DIR, PROJECT, str(frame)))
     frame += 1
 
 
