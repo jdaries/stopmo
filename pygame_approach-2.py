@@ -76,3 +76,4 @@ while True:
     if frame > 1:
         CAMERA.stop_preview()
         frame_display_ghost(WIDTH, HEIGHT, frame)
+        CAMERA.start_preview()
