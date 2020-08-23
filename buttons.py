@@ -45,7 +45,7 @@ def stop():
 
 def preview():
     print("preview button pressed")
-    CAMERA.start_preview(fullscreen=False, window=(48, 32, int(WIDTH*.95), int(HEIGHT*.95)))
+    CAMERA.start_preview(fullscreen=False, window=(48, 32, WIDTH, HEIGHT))
 
 
 def deleteframe_button():
