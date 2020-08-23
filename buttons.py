@@ -57,6 +57,8 @@ def take_picture():
 
 
 def ghost_preview():
+    print("ghost button pressed")
+    stop()
     image = pygame.image.load(get_next_frame(offset=0))
     image = pygame.transform.scale(image, (W, H))
     SCREEN.blit(image, (0, 0))
