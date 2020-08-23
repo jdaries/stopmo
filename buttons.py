@@ -23,8 +23,8 @@ pygame.init()
 W, H = pygame.display.list_modes()[0]
 WIDTH = (int(W*.9) // 32) * 32
 HEIGHT = (int(H*.9) // 32) * 32
-X_OFFSET = W - WIDTH
-Y_OFFSET = H = HEIGHT
+X_OFFSET = W - WIDTH // 2
+Y_OFFSET = H - HEIGHT // 2
 print('Resolution: ({WIDTH}, {HEIGHT}).'.format(WIDTH=WIDTH, HEIGHT=HEIGHT))
 SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.mouse.set_visible = False
