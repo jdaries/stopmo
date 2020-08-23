@@ -45,6 +45,7 @@ def stop():
 
 def preview():
     print("preview button pressed")
+    SCREEN.fill((0, 0, 0))
     CAMERA.start_preview(fullscreen=False, window=(48, 32, WIDTH, HEIGHT))
 
 
