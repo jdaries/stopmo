@@ -62,7 +62,7 @@ def ghost_preview():
     print("ghost button pressed")
     image = pygame.image.load(get_next_frame(offset=0))
     image = pygame.transform.scale(image, (WIDTH, HEIGHT))
-    SCREEN.blit(image, (48, 32))
+    SCREEN.blit(image, (0, 0))
     pygame.display.update()
 
 
