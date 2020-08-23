@@ -1,9 +1,15 @@
 #!/usr/bin/python3
 import pygame
+import glob
+import os
 
 from pygame.locals import *
 from gpiozero import Button
 from picamera import PiCamera
+
+HOME_DIR = "/home/pi/Documents/stopmo_files"
+PROJECT = "buttons"
+PAD_WIDTH = 2
 
 # 2 = delete movie
 # 3 = preview movie
@@ -52,7 +58,9 @@ def deleteframe_button():
 
 
 def takepic_button():
-    echo("take picture button pressed")
+    print("take picture button pressed")
+    frame_fname = get_max_frame()
+    CAMERA.capture(frame_fname)
 
 
 def save_button():
@@ -61,6 +69,14 @@ def save_button():
 
 def exit_button():
     exit()
+
+
+def get_next_frame():
+    frames = glob.glob("{}/{}/frames/frame_*.jpg".format(HOME_DIR, PROJECT))
+    if len(frames) == 0:
+        return '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(1).zfill(PAD_WIDTH))
+    sequence = [int(os.path.basename(x).split(".")[0].split("_")[-1]) for x in frames]
+    return '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(max(sequence)+1).zfill(PAD_WIDTH))
 
 
 while True:
