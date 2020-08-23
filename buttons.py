@@ -65,7 +65,7 @@ def exit_button():
 
 while True:
     stop_preview_button.when_pressed = stop
-    preview_movie_button.when_pressed = preview
+    preview_button.when_pressed = preview
     delete_frame_button.when_pressed = deleteframe_button
     take_picture_button.when_pressed = takepic_button
     save_movie_button.when_pressed = save_button
