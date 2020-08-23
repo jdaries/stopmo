@@ -15,7 +15,7 @@ stop_preview_button = Button(2)
 preview_button = Button(3)
 delete_frame_button = Button(4)
 take_picture_button = Button(17)
-save_movie_button = Button(27)
+ghost_preview_button = Button(27)
 exit_program_button = Button(22)
 
 
@@ -50,32 +50,35 @@ def deleteframe_button():
     echo("delete frame button pressed")
 
 
-def takepic_button():
+def take_picture():
     print("take picture button pressed")
     frame_fname = get_next_frame()
     CAMERA.capture(frame_fname)
 
 
-def save_button():
-    echo("save picure button pressed")
+def ghost_preview():
+    image = pygame.image.load(get_next_frame(offset=0))
+    image = pygame.transform.scale(image, (W, H))
+    SCREEN.blit(image, (0, 0))
+    pygame.display.update()
 
 
 def exit_button():
     exit()
 
 
-def get_next_frame():
+def get_next_frame(offset=1):
     frames = glob.glob("{}/{}/frames/frame_*.jpg".format(HOME_DIR, PROJECT))
     if len(frames) == 0:
         return '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(1).zfill(PAD_WIDTH))
     sequence = [int(os.path.basename(x).split(".")[0].split("_")[-1]) for x in frames]
-    return '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(max(sequence)+1).zfill(PAD_WIDTH))
+    return '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(max(sequence)+offset).zfill(PAD_WIDTH))
 
 
 while True:
     stop_preview_button.when_pressed = stop
     preview_button.when_pressed = preview
     delete_frame_button.when_pressed = deleteframe_button
-    take_picture_button.when_pressed = takepic_button
-    save_movie_button.when_pressed = save_button
+    take_picture_button.when_pressed = take_picture
+    ghost_preview_button.when_pressed = ghost_preview
     exit_program_button.when_pressed = exit_button
