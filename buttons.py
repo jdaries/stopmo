@@ -21,8 +21,10 @@ exit_program_button = Button(22)
 
 pygame.init()
 W, H = pygame.display.list_modes()[0]
-WIDTH = int(W*.9)
-HEIGHT = int(H*.9)
+WIDTH = (int(W*.9) // 32) * 32
+HEIGHT = (int(H*.9) // 32) * 32
+X_OFFSET = W - WIDTH
+Y_OFFSET = H = HEIGHT
 print('Resolution: ({WIDTH}, {HEIGHT}).'.format(WIDTH=WIDTH, HEIGHT=HEIGHT))
 SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.mouse.set_visible = False
@@ -43,7 +45,7 @@ def stop():
 
 def preview():
     print("preview button pressed")
-    CAMERA.start_preview(fullscreen=False, window=(int(W*.05), int(H*.05), WIDTH, HEIGHT))
+    CAMERA.start_preview(fullscreen=False, window=(X_OFFSET, Y_OFFSET, WIDTH, HEIGHT))
 
 
 def deleteframe_button():
@@ -59,8 +61,8 @@ def take_picture():
 def ghost_preview():
     print("ghost button pressed")
     image = pygame.image.load(get_next_frame(offset=0))
-    image = pygame.transform.scale(image, (W, H))
-    SCREEN.blit(image, (0, 0))
+    image = pygame.transform.scale(image, (WIDTH, HEIGHT))
+    SCREEN.blit(image, (X_OFFSET, Y_OFFSET))
     pygame.display.update()
 
 
