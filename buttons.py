@@ -11,13 +11,6 @@ HOME_DIR = "/home/pi/Documents/stopmo_files"
 PROJECT = "buttons"
 PAD_WIDTH = 2
 
-# 2 = delete movie
-# 3 = preview movie
-# 4 = delete a frame
-# 17 - take a picture
-# 27 - save movie
-# 22 - exit program
-
 stop_preview_button = Button(2)
 preview_button = Button(3)
 delete_frame_button = Button(4)
@@ -59,7 +52,7 @@ def deleteframe_button():
 
 def takepic_button():
     print("take picture button pressed")
-    frame_fname = get_max_frame()
+    frame_fname = get_next_frame()
     CAMERA.capture(frame_fname)
 
 
