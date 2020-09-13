@@ -30,7 +30,7 @@ print('Resolution: ({WIDTH}, {HEIGHT}).'.format(WIDTH=WIDTH, HEIGHT=HEIGHT))
 SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.mouse.set_visible = False
 pygame.display.toggle_fullscreen()
-CAMERA = PiCamera()
+CAMERA = PiCamera(sensor_mode=2)
 CAMERA.preview_alpha = 128
 CAMERA.resolution = (WIDTH, HEIGHT)
 
