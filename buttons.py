@@ -6,6 +6,7 @@ import os
 from pygame.locals import *
 from gpiozero import Button
 from picamera import PiCamera
+from PIL import Image
 
 HOME_DIR = "/home/pi/Documents/stopmo_files"
 PROJECT = "buttons"
@@ -60,10 +61,10 @@ def take_picture():
 
 def ghost_preview():
     print("ghost button pressed")
-    image = pygame.image.load(get_next_frame(offset=0))
-    image = pygame.transform.scale(image, (WIDTH, HEIGHT))
-    SCREEN.blit(image, (0, 0))
-    pygame.display.update()
+    image = Image.open(get_next_frame(offset=0))
+    pad = Image.new('RGB', (WIDTH, HEIGHT,))
+    pad.paste(img, (0, 0))
+    o = CAMERA.add_overlay(pad.tostring())
 
 
 def exit_button():
