@@ -66,7 +66,7 @@ def preview_overlay(camera=None):
     pad.paste(overlay_img)
 
     # Add the overlay
-    camera.add_overlay(pad.tobytes())
+    camera.add_overlay(pad.tobytes(), size=(WIDTH, HEIGHT))
 
 
 def echo(stmt):
