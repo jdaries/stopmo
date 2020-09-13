@@ -35,6 +35,40 @@ CAMERA.preview_alpha = 128
 CAMERA.resolution = (WIDTH, HEIGHT)
 
 
+def _pad(resolution, width=32, height=16):
+    # Pads the specified resolution
+    # up to the nearest multiple of *width* and *height*; this is
+    # needed because overlays require padding to the camera's
+    # block size (32x16)
+    return (
+        ((resolution[0] + (width - 1)) // width) * width,
+        ((resolution[1] + (height - 1)) // height) * height,
+    )
+
+
+def remove_overlays(camera):
+
+    # Remove all overlays from the camera preview
+    for o in camera.overlays:
+        camera.remove_overlay(o)
+
+
+def preview_overlay(camera=None):
+
+    # Remove all overlays
+    remove_overlays(camera)
+
+    # Get an Image object of the chosen overlay
+    overlay_img = Image.open(get_next_frame(offset=0))
+
+    # Pad it to the right resolution
+    pad = Image.new('RGB', _pad(camera.resolution))
+    pad.paste(overlay_img, (0, 0))
+
+    # Add the overlay
+    camera.add_overlay(pad.tobytes())
+
+
 def echo(stmt):
     print(stmt)
 
@@ -61,10 +95,7 @@ def take_picture():
 
 def ghost_preview():
     print("ghost button pressed")
-    image = Image.open(get_next_frame(offset=0))
-    pad = Image.new('RGB', (WIDTH, HEIGHT,))
-    pad.paste(image, (0, 0))
-    o = CAMERA.add_overlay(pad.tobytes())
+    preview_overlay(CAMERA)
 
 
 def exit_button():
