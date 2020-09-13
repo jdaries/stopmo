@@ -63,7 +63,7 @@ def preview_overlay(camera=None):
 
     # Pad it to the right resolution
     pad = Image.new('RGB', camera.resolution)
-    pad.paste(overlay_img)
+    pad.paste(overlay_img, 48, 32)
 
     # Add the overlay
     camera.add_overlay(pad.tobytes())
