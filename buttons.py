@@ -54,7 +54,8 @@ def remove_overlays(camera):
 
 
 def preview_overlay(camera=None):
-
+    global WIDTH
+    global HEIGHT
     # Remove all overlays
     remove_overlays(camera)
 
