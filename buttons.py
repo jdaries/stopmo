@@ -67,7 +67,7 @@ def preview_overlay(camera=None):
     pad.paste(overlay_img)
 
     # Add the overlay
-    camera.add_overlay(pad.tobytes(), crop=(48, 32, WIDTH, HEIGHT))
+    camera.add_overlay(pad.tobytes())
 
 
 def echo(stmt):
@@ -81,7 +81,7 @@ def stop():
 
 def preview():
     print("preview button pressed")
-    CAMERA.start_preview(fullscreen=False, window=(48, 32, WIDTH, HEIGHT))
+    CAMERA.start_preview()
 
 
 def deleteframe_button():
