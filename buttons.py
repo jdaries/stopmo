@@ -64,7 +64,7 @@ def ghost_preview():
     image = Image.open(get_next_frame(offset=0))
     pad = Image.new('RGB', (WIDTH, HEIGHT,))
     pad.paste(image, (0, 0))
-    o = CAMERA.add_overlay(pad.tostring())
+    o = CAMERA.add_overlay(pad.tobytes())
 
 
 def exit_button():
