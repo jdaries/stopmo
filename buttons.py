@@ -63,7 +63,7 @@ def ghost_preview():
     print("ghost button pressed")
     image = Image.open(get_next_frame(offset=0))
     pad = Image.new('RGB', (WIDTH, HEIGHT,))
-    pad.paste(img, (0, 0))
+    pad.paste(image, (0, 0))
     o = CAMERA.add_overlay(pad.tostring())
 
 
