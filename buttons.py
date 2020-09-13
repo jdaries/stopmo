@@ -20,19 +20,19 @@ ghost_preview_button = Button(27)
 exit_program_button = Button(22)
 
 
-pygame.init()
-W, H = pygame.display.list_modes()[0]
-WIDTH = (int(W*.9) // 32) * 32
-HEIGHT = (int(H*.9) // 32) * 32
-X_OFFSET = W - WIDTH // 2
-Y_OFFSET = H - HEIGHT // 2
-print('Resolution: ({WIDTH}, {HEIGHT}).'.format(WIDTH=WIDTH, HEIGHT=HEIGHT))
-SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
+#pygame.init()
+# W, H = pygame.display.list_modes()[0]
+# WIDTH = (int(W*.9) // 32) * 32
+# HEIGHT = (int(H*.9) // 32) * 32
+# X_OFFSET = W - WIDTH // 2
+# Y_OFFSET = H - HEIGHT // 2
+#print('Resolution: ({WIDTH}, {HEIGHT}).'.format(WIDTH=WIDTH, HEIGHT=HEIGHT))
+#SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
 #pygame.mouse.set_visible = False
-pygame.display.toggle_fullscreen()
+#pygame.display.toggle_fullscreen()
 CAMERA = PiCamera(sensor_mode=2)
 CAMERA.preview_alpha = 128
-CAMERA.resolution = (WIDTH, HEIGHT)
+#CAMERA.resolution = (WIDTH, HEIGHT)
 
 
 def _pad(resolution, width=32, height=16):
@@ -54,8 +54,6 @@ def remove_overlays(camera):
 
 
 def preview_overlay(camera=None):
-    global WIDTH
-    global HEIGHT
     # Remove all overlays
     remove_overlays(camera)
 
@@ -63,7 +61,7 @@ def preview_overlay(camera=None):
     overlay_img = Image.open(get_next_frame(offset=0))
 
     # Pad it to the right resolution
-    pad = Image.new('RGB', (WIDTH, HEIGHT))
+    pad = Image.new('RGB', _pad(camera.resolution))
     pad.paste(overlay_img)
 
     # Add the overlay
