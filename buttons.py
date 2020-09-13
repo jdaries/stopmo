@@ -28,7 +28,7 @@ X_OFFSET = W - WIDTH // 2
 Y_OFFSET = H - HEIGHT // 2
 print('Resolution: ({WIDTH}, {HEIGHT}).'.format(WIDTH=WIDTH, HEIGHT=HEIGHT))
 SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
-pygame.mouse.set_visible = False
+#pygame.mouse.set_visible = False
 pygame.display.toggle_fullscreen()
 CAMERA = PiCamera(sensor_mode=2)
 CAMERA.preview_alpha = 128
@@ -63,7 +63,7 @@ def preview_overlay(camera=None):
 
     # Pad it to the right resolution
     pad = Image.new('RGB', camera.resolution)
-    pad.paste(overlay_img, 48, 32)
+    pad.paste(overlay_img)
 
     # Add the overlay
     camera.add_overlay(pad.tobytes(), layer=3)
