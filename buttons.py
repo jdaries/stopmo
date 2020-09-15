@@ -9,7 +9,7 @@ from picamera import PiCamera
 from PIL import Image
 
 HOME_DIR = "/home/pi/Documents/stopmo_files"
-PROJECT = "buttons"
+PROJECT = sys.argv[1]
 PAD_WIDTH = 2
 
 stop_preview_button = Button(2)
@@ -115,10 +115,17 @@ def get_next_frame(offset=1):
     return '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(max(sequence)+offset).zfill(PAD_WIDTH))
 
 
-while True:
-    stop_preview_button.when_pressed = stop
-    preview_button.when_pressed = preview
-    delete_frame_button.when_pressed = deleteframe_button
-    take_picture_button.when_pressed = take_picture
-    ghost_preview_button.when_pressed = ghost_preview
-    exit_program_button.when_pressed = exit_button
+def main():
+    while True:
+        stop_preview_button.when_pressed = stop
+        preview_button.when_pressed = preview
+        delete_frame_button.when_pressed = deleteframe_button
+        take_picture_button.when_pressed = take_picture
+        ghost_preview_button.when_pressed = ghost_preview
+        exit_program_button.when_pressed = exit_button
+
+
+if __name__ == '__main__':
+    if not os.path.exists("{}/{}".format(HOME_DIR, PROJECT)):
+        os.mkdir("{}/{}".format(HOME_DIR, PROJECT))
+    main()
