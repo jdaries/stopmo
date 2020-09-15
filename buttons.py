@@ -31,7 +31,7 @@ exit_program_button = Button(22)
 #pygame.mouse.set_visible = False
 #pygame.display.toggle_fullscreen()
 CAMERA = PiCamera(sensor_mode=2)
-CAMERA.preview_alpha = 128
+#CAMERA.preview_alpha = 128
 #CAMERA.resolution = (WIDTH, HEIGHT)
 
 
@@ -65,7 +65,7 @@ def preview_overlay(camera=None):
     pad.paste(overlay_img)
 
     # Add the overlay
-    camera.add_overlay(pad.tobytes())
+    camera.add_overlay(pad.tobytes(), alpha=128, layer=3)
 
 
 def echo(stmt):
@@ -80,6 +80,10 @@ def stop():
 def preview():
     print("preview button pressed")
     CAMERA.start_preview()
+    if get_next_frame == '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(1).zfill(PAD_WIDTH)):
+        return
+    else:
+        ghost_preview()
 
 
 def deleteframe_button():
@@ -90,6 +94,7 @@ def take_picture():
     print("take picture button pressed")
     frame_fname = get_next_frame()
     CAMERA.capture(frame_fname)
+    ghost_preview()
 
 
 def ghost_preview():
