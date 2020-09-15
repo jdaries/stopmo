@@ -3,8 +3,10 @@ import pygame
 import glob
 import os
 import sys
+import subprocess
 
 # from pygame.locals import *
+import ffmpeg
 from gpiozero import Button
 from picamera import PiCamera
 from PIL import Image
@@ -17,7 +19,7 @@ stop_preview_button = Button(2)
 preview_button = Button(3)
 delete_frame_button = Button(4)
 take_picture_button = Button(17)
-ghost_preview_button = Button(27)
+preview_film_button = Button(27)
 exit_program_button = Button(22)
 
 
@@ -75,13 +77,20 @@ def echo(stmt):
 
 def stop():
     print("stop preview button pressed")
+    remove_overlays(CAMERA)
     CAMERA.stop_preview()
 
 
 def preview():
     print("preview button pressed")
     CAMERA.start_preview()
-    if get_next_frame(offset=0) == '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(0).zfill(PAD_WIDTH)):
+    frame_base_str = '{}/{}/frames/frame_{}.jpg'
+    if get_next_frame(offset=0) == frame_base_str.format(HOME_DIR,
+                                                         PROJECT,
+                                                         str(0).zfill(
+                                                                      PAD_WIDTH
+                                                                      )
+                                                         ):
         return
     else:
         ghost_preview()
@@ -111,9 +120,27 @@ def exit_button():
 def get_next_frame(offset=1):
     frames = glob.glob("{}/{}/frames/frame_*.jpg".format(HOME_DIR, PROJECT))
     if len(frames) == 0:
-        return '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(1).zfill(PAD_WIDTH))
-    sequence = [int(os.path.basename(x).split(".")[0].split("_")[-1]) for x in frames]
-    return '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(max(sequence)+offset).zfill(PAD_WIDTH))
+        return '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT,
+                                                  str(1).zfill(PAD_WIDTH))
+    sequence = [int(os.path.basename(x).split(".")[0].split("_")[-1])
+                for x
+                in frames]
+    return '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT,
+                                              str(
+                                                  max(sequence)+offset
+                                                  ).zfill(PAD_WIDTH))
+
+
+def assemble_and_preview():
+    stop()
+    output_fname = '{hdir}/{proj}/movie/{proj}.mp4'.format({hdir=HOME_DIR,
+                                                            proj=PROJECT})
+    video_in = ffmpeg.input('{}/{}/frame_*.jpg'.format(HOME_DIR, PROJECT),
+                            pattern_type='glob',
+                            framerate=12)
+    video_out = ffmpeg.output(video_in, output_fname)
+    video_out.run()
+    subprocess.call(['xdg-open', output_fname])
 
 
 def main():
@@ -122,11 +149,12 @@ def main():
         preview_button.when_pressed = preview
         delete_frame_button.when_pressed = deleteframe_button
         take_picture_button.when_pressed = take_picture
-        ghost_preview_button.when_pressed = ghost_preview
+        preview_film_button.when_pressed = assemble_and_preview
         exit_program_button.when_pressed = exit_button
 
 
 if __name__ == '__main__':
     if not os.path.exists("{}/{}/frames".format(HOME_DIR, PROJECT)):
         os.makedirs("{}/{}/frames".format(HOME_DIR, PROJECT))
+        os.mkdir("{}/{}/movie".format(HOME_DIR, PROJECT))
     main()
