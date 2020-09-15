@@ -3,7 +3,7 @@ import pygame
 import glob
 import os
 
-from pygame.locals import *
+#from pygame.locals import *
 from gpiozero import Button
 from picamera import PiCamera
 from PIL import Image
@@ -80,7 +80,7 @@ def stop():
 def preview():
     print("preview button pressed")
     CAMERA.start_preview()
-    if get_next_frame(offset=1) == '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(0).zfill(PAD_WIDTH)):
+    if get_next_frame(offset=0) == '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(0).zfill(PAD_WIDTH)):
         return
     else:
         ghost_preview()
@@ -88,6 +88,7 @@ def preview():
 
 def deleteframe_button():
     echo("delete frame button pressed")
+    os.remove(get_next_frame(offset=0))
 
 
 def take_picture():
