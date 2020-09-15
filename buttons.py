@@ -2,8 +2,9 @@
 import pygame
 import glob
 import os
+import sys
 
-#from pygame.locals import *
+# from pygame.locals import *
 from gpiozero import Button
 from picamera import PiCamera
 from PIL import Image
@@ -20,19 +21,19 @@ ghost_preview_button = Button(27)
 exit_program_button = Button(22)
 
 
-#pygame.init()
+# pygame.init()
 # W, H = pygame.display.list_modes()[0]
 # WIDTH = (int(W*.9) // 32) * 32
 # HEIGHT = (int(H*.9) // 32) * 32
 # X_OFFSET = W - WIDTH // 2
 # Y_OFFSET = H - HEIGHT // 2
-#print('Resolution: ({WIDTH}, {HEIGHT}).'.format(WIDTH=WIDTH, HEIGHT=HEIGHT))
-#SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
-#pygame.mouse.set_visible = False
-#pygame.display.toggle_fullscreen()
+# print('Resolution: ({WIDTH}, {HEIGHT}).'.format(WIDTH=WIDTH, HEIGHT=HEIGHT))
+# SCREEN = pygame.display.set_mode([WIDTH, HEIGHT])
+# pygame.mouse.set_visible = False
+# pygame.display.toggle_fullscreen()
 CAMERA = PiCamera(sensor_mode=2)
-#CAMERA.preview_alpha = 128
-#CAMERA.resolution = (WIDTH, HEIGHT)
+# CAMERA.preview_alpha = 128
+# CAMERA.resolution = (WIDTH, HEIGHT)
 
 
 def _pad(resolution, width=32, height=16):
