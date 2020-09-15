@@ -128,5 +128,5 @@ def main():
 
 if __name__ == '__main__':
     if not os.path.exists("{}/{}/frames".format(HOME_DIR, PROJECT)):
-        os.mkdirs("{}/{}/frames".format(HOME_DIR, PROJECT))
+        os.makedirs("{}/{}/frames".format(HOME_DIR, PROJECT))
     main()
