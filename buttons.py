@@ -133,8 +133,8 @@ def get_next_frame(offset=1):
 
 def assemble_and_preview():
     stop()
-    output_fname = '{hdir}/{proj}/movie/{proj}.mp4'.format({hdir=HOME_DIR,
-                                                            proj=PROJECT})
+    output_fname = '{hdir}/{proj}/movie/{proj}.mp4'.format(hdir=HOME_DIR,
+                                                            proj=PROJECT)
     video_in = ffmpeg.input('{}/{}/frame_*.jpg'.format(HOME_DIR, PROJECT),
                             pattern_type='glob',
                             framerate=12)
