@@ -80,7 +80,7 @@ def stop():
 def preview():
     print("preview button pressed")
     CAMERA.start_preview()
-    if get_next_frame == '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(1).zfill(PAD_WIDTH)):
+    if get_next_frame() == '{}/{}/frames/frame_{}.jpg'.format(HOME_DIR, PROJECT, str(1).zfill(PAD_WIDTH)):
         return
     else:
         ghost_preview()
