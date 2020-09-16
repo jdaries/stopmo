@@ -137,7 +137,7 @@ def assemble_and_preview():
     stop()
     output_fname = '{m_dir}/{proj}_preview.mp4'.format(m_dir=movie_dir,
                                                        proj=PROJECT)
-    if os.exists(output_fname):
+    if os.path.exists(output_fname):
         os.remove(output_fname)
     video_in = ffmpeg.input('{}/frame_*.jpg'.format(frames_dir),
                             pattern_type='glob',
