@@ -135,8 +135,9 @@ def assemble_and_preview():
         print("assemble_and_preview button pushed")
         return
     stop()
-    output_fname = '{m_dir}/{proj}.mp4'.format(m_dir=movie_dir,
-                                               proj=PROJECT)
+    output_fname = '{m_dir}/{proj}_preview.mp4'.format(m_dir=movie_dir,
+                                                       proj=PROJECT)
+    os.remove(output_fname)
     video_in = ffmpeg.input('{}/frame_*.jpg'.format(frames_dir),
                             pattern_type='glob',
                             framerate=12)
