@@ -124,7 +124,7 @@ def get_next_frame(offset=1):
     sequence = [int(os.path.basename(x).split(".")[0].split("_")[-1])
                 for x
                 in frames]
-    return '{}/frame_{}.jpg'.format(frames_dir, PROJECT,
+    return '{}/frame_{}.jpg'.format(frames_dir,
                                     str(
                                         max(sequence)+offset
                                         ).zfill(PAD_WIDTH))
