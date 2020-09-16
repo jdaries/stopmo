@@ -148,6 +148,7 @@ def assemble_and_preview():
 
 
 def main():
+    print("ok ready")
     while True:
         stop_preview_button.when_pressed = stop
         preview_button.when_pressed = preview
