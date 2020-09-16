@@ -165,8 +165,8 @@ if __name__ == '__main__':
                         help="debug functions by just printing" +
                              "what is to be done to standard output")
     args = parser.parse_args()
-    debug_mode = args['debug_mode']
-    PROJECT = args['project_name']
+    debug_mode = args.debug_mode
+    PROJECT = args.project_name
 
     frames_dir = "{}/{}/frames".format(HOME_DIR, PROJECT)
     movie_dir = "{}/{}/movie".format(HOME_DIR, PROJECT)
