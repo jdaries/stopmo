@@ -63,7 +63,7 @@ def preview_overlay(camera=None):
 
 
 def stop():
-    if debug_mode():
+    if debug_mode:
         print("stop preview button pressed")
         return
     remove_overlays(CAMERA)
