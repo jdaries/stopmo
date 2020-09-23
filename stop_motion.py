@@ -83,7 +83,6 @@ def preview():
         print("preview button pressed")
         return
     CAMERA.start_preview()
-    frame_base_str = '{}/frame_{}.jpg'
     if count_frames(PROJECT) == 0:
         return
     else:
@@ -121,15 +120,15 @@ def exit_button():
 def get_next_frame(offset=1):
     if debug_mode:
         print("get_next_frame function called")
-    frames = glob.glob("{}/frame_*.jpg".format(frames_dir))
+    frames = glob.glob(os.path.join(frames_dir, "frame_*.jpg"))
     if len(frames) == 0:
         frame_no = str(1).zfill(PAD_WIDTH)
-        return '{}/frame_{}.jpg'.format(frames_dir, frame_no)
-    sequence = [int(os.path.basename(x).split(".")[0].split("_")[-1])
-                for x
-                in frames]
-    frame_no = str(max(sequence)+offset).zfill(PAD_WIDTH)
-    return '{}/frame_{}.jpg'.format(frames_dir, frame_no)
+    else:
+        sequence = [int(os.path.basename(x).split(".")[0].split("_")[-1])
+                    for x
+                    in frames]
+        frame_no = str(max(sequence)+offset).zfill(PAD_WIDTH)
+    return os.path.join(frames_dir, 'frame_{}.jpg').format(frame_no)
 
 
 def assemble_and_preview():
@@ -138,13 +137,14 @@ def assemble_and_preview():
         return
     stop()
     frame_count_file = os.path.join(movie_dir, "preview_frame.txt")
-    output_fname = '{m_dir}/{proj}_preview.mp4'.format(m_dir=movie_dir,
-                                                       proj=PROJECT)
+    output_fname = os.path.join(movie_dir,
+                                '{proj}_preview.mp4').format(proj=PROJECT)
+    frame_range = os.path.join(frames_dir,
+                               'frame_%0{}d.jpg').format(PAD_WIDTH)
     if not os.path.exists(output_fname):
         append_flag = False
         with open(frame_count_file, "w") as f_out:
             f_out.write(count_frames(PROJECT))
-        frame_range = '{}/frame_%0{}d.jpg'.format(frames_dir, PAD_WIDTH)
         video_in = ffmpeg.input(frame_range,
                                 pattern_type='sequence',
                                 framerate=FRAME_RATE)
@@ -171,8 +171,8 @@ def clear_project():
     if debug_mode:
         print("asked to remove files associated with {}".format(PROJECT))
         return
-    frames = glob.glob("{}/*.jpg".format(frames_dir))
-    previews = glob.glob("{}/*_preview.mp4".format(movie_dir))
+    frames = glob.glob(os.path.join(frames_dir, "*.jpg"))
+    previews = glob.glob(os.path.join(movie_dir, "*_preview.mp4"))
     for frame in frames:
         os.remove(frame)
     for preview in previews:
@@ -180,8 +180,8 @@ def clear_project():
 
 
 def count_frames(proj):
-    tmp_frame_dir = "{}/{}/frames".format(HOME_DIR, proj)
-    frames = glob.glob("{}/frame_*.jpg".format(tmp_frame_dir))
+    tmp_frame_dir = os.path.join(HOME_DIR, proj, "frames")
+    frames = glob.glob(os.path.join(tmp_frame_dir, "frame_*.jpg"))
     if len(frames) == 0:
         return str(1).zfill(PAD_WIDTH)
     sequence = [int(os.path.basename(x).split(".")[0].split("_")[-1])
@@ -192,12 +192,21 @@ def count_frames(proj):
 
 
 def list_projects():
-    projects = glob.glob("{}/*".format(HOME_DIR))
+    projects = glob.glob(os.path.join(HOME_DIR, "*"))
+    project_names = [os.path.basename(x) for x in projects]
     frame_counts = [count_frames(x) for x in projects]
     projs_w_frames = zip(projects, frame_counts)
     for x, y in projs_w_frames:
         print("Project:{}; Frames:{}".format(x, y))
     return
+
+
+def frame_directory(proj):
+    return os.path.join(HOME_DIR, proj, "frames")
+
+
+def movie_directory(proj):
+    return os.path.join(HOME_DIR, proj, "movies")
 
 
 def main():
@@ -236,8 +245,8 @@ if __name__ == '__main__':
     list_flag = args.list_projects
     FRAME_RATE = args.frame_rate
 
-    frames_dir = "{}/{}/frames".format(HOME_DIR, PROJECT)
-    movie_dir = "{}/{}/movie".format(HOME_DIR, PROJECT)
+    frames_dir = frame_directory(PROJECT)
+    movie_dir = movie_directory(PROJECT)
 
     if clear_flag:
         clear_project()
