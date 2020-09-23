@@ -53,7 +53,7 @@ def preview_overlay(camera=None):
     remove_overlays(camera)
 
     overlay_img = Image.open(get_next_frame(offset=0))
-    pad = Image.new('RGB', _pad(camera.resolution))
+    pad = Image.new('RGBA', _pad(camera.resolution))
     pad.paste(overlay_img)
 
     txt = Image.new("RGBA", pad.size, (255, 255, 255, 0))
