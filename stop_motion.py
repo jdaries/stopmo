@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 HOME_DIR = "/home/pi/Documents/stopmo_files"
 PAD_WIDTH = 4
-FONT_DIR = "/usr/share/fonts"
+FONT_DIR = "/usr/share/fonts/truetype/freefont"
 
 stop_preview_button = Button(2)
 preview_button = Button(3)
@@ -58,7 +58,7 @@ def preview_overlay(camera=None):
 
     txt = Image.new("RGBA", pad.size, (255, 255, 255, 0))
 
-    font = ImageFont.truetype(os.path.join(FONT_DIR, "arial.ttf"), 120)
+    font = ImageFont.truetype(os.path.join(FONT_DIR, "FreeSans.ttf"), 120)
 
     d = ImageDraw.Draw(txt)
     frame_no = count_frames()
