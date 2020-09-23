@@ -8,10 +8,11 @@ import argparse
 import ffmpeg
 from gpiozero import Button
 from picamera import PiCamera
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 HOME_DIR = "/home/pi/Documents/stopmo_files"
 PAD_WIDTH = 4
+FONT_DIR = "/usr/share/fonts"
 
 stop_preview_button = Button(2)
 preview_button = Button(3)
@@ -51,15 +52,22 @@ def preview_overlay(camera=None):
         print("preview_overlay function called")
     remove_overlays(camera)
 
-    # Get an Image object of the chosen overlay
     overlay_img = Image.open(get_next_frame(offset=0))
-
-    # Pad it to the right resolution
     pad = Image.new('RGB', _pad(camera.resolution))
     pad.paste(overlay_img)
 
+    txt = Image.new("RGBA", pad.size, (255, 255, 255, 0))
+
+    font = ImageFont.truetype(os.path.join(FONT_DIR, "arial.ttf"), 120)
+
+    d = ImageDraw.Draw(txt)
+    frame_no = count_frames()
+    d.text((10, 10), frame_no, fill=(0, 0, 0), font=font)
+
+    out = Image.alpha_composite(pad, txt)
+    out = out.convert("RGB")
     # Add the overlay
-    camera.add_overlay(pad.tobytes(), alpha=128, layer=3)
+    camera.add_overlay(out.tobytes(), alpha=128, layer=3)
 
 
 def stop():
@@ -77,7 +85,7 @@ def preview():
     CAMERA.start_preview()
     frame_base_str = '{}/frame_{}.jpg'
     if get_next_frame(offset=0) == frame_base_str.format(frames_dir,
-                                                         str(0).zfill(
+                                                         str(1).zfill(
                                                                       PAD_WIDTH
                                                                       )
                                                          ):
@@ -119,15 +127,13 @@ def get_next_frame(offset=1):
         print("get_next_frame function called")
     frames = glob.glob("{}/frame_*.jpg".format(frames_dir))
     if len(frames) == 0:
-        return '{}/frame_{}.jpg'.format(frames_dir,
-                                        str(1).zfill(PAD_WIDTH))
+        frame_no = str(1).zfill(PAD_WIDTH)
+        return '{}/frame_{}.jpg'.format(frames_dir, frame_no)
     sequence = [int(os.path.basename(x).split(".")[0].split("_")[-1])
                 for x
                 in frames]
-    return '{}/frame_{}.jpg'.format(frames_dir,
-                                    str(
-                                        max(sequence)+offset
-                                        ).zfill(PAD_WIDTH))
+    frame_no = str(max(sequence)+offset).zfill(PAD_WIDTH)
+    return '{}/frame_{}.jpg'.format(frames_dir, frame_no)
 
 
 def assemble_and_preview():
@@ -145,6 +151,38 @@ def assemble_and_preview():
     video_out = ffmpeg.output(video_in, output_fname)
     video_out.run()
     subprocess.call(['xdg-open', output_fname])
+
+
+def clear_project():
+    if debug_mode:
+        print("asked to remove files associated with {}".format(PROJECT))
+        return
+    frames = glob.glob("{}/*.jpg".format(frames_dir))
+    previews = glob.glob("{}/*_preview.mp4".format(movie_dir))
+    for frame in frames:
+        os.remove(frame)
+    for preview in previews:
+        os.remove(preview)
+
+
+def count_frames():
+    frames = glob.glob("{}/frame_*.jpg".format(frames_dir))
+    if len(frames) == 0:
+        return str(1).zfill(PAD_WIDTH)
+    sequence = [int(os.path.basename(x).split(".")[0].split("_")[-1])
+                for x
+                in frames]
+    frame_no = str(max(sequence)).zfill(PAD_WIDTH)
+    return frame_no
+
+
+def list_projects():
+    projects = glob.glob("{}/*".format(HOME_DIR))
+    frame_counts = [len(glob.glob("{}/{}/frames/frame_*.jpg".format(HOME_DIR, x))) for x in projects]
+    projs_w_frames = zip(projects, frame_counts)
+    for x, y in projs_w_frames:
+        print("Project:{}; Frames:{}".format(x, y))
+    return
 
 
 def main():
@@ -167,12 +205,27 @@ if __name__ == '__main__':
                         action='store_true',
                         help="debug functions by just printing" +
                              "what is to be done to standard output")
+    parser.add_argument('--clear_files', '-c',
+                        action='store_true',
+                        help="delete files for specified project")
+    parser.add_argument('--list', '-ls',
+                        action='store_true',
+                        help="list current projects")
     args = parser.parse_args()
     debug_mode = args.debug_mode
     PROJECT = args.project_name
+    clear_flag = args.clear_files
 
     frames_dir = "{}/{}/frames".format(HOME_DIR, PROJECT)
     movie_dir = "{}/{}/movie".format(HOME_DIR, PROJECT)
+
+    if clear_flag:
+        clear_project()
+        exit()
+
+    if parser.list:
+        list_projects()
+        exit()
 
     if not os.path.exists(frames_dir):
         if debug_mode:
