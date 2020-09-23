@@ -215,6 +215,7 @@ if __name__ == '__main__':
     debug_mode = args.debug_mode
     PROJECT = args.project_name
     clear_flag = args.clear_files
+    list_flag = args.list_projects
 
     frames_dir = "{}/{}/frames".format(HOME_DIR, PROJECT)
     movie_dir = "{}/{}/movie".format(HOME_DIR, PROJECT)
@@ -223,7 +224,7 @@ if __name__ == '__main__':
         clear_project()
         exit()
 
-    if args.list_project:
+    if list_flag:
         list_projects()
         exit()
 
