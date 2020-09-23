@@ -208,7 +208,7 @@ if __name__ == '__main__':
     parser.add_argument('--clear_files', '-c',
                         action='store_true',
                         help="delete files for specified project")
-    parser.add_argument('--list', '-ls',
+    parser.add_argument('--list_projects', '-ls',
                         action='store_true',
                         help="list current projects")
     args = parser.parse_args()
@@ -223,7 +223,7 @@ if __name__ == '__main__':
         clear_project()
         exit()
 
-    if parser.list:
+    if args.list_project:
         list_projects()
         exit()
 
