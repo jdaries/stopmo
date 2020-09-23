@@ -195,7 +195,7 @@ def list_projects():
     projects = glob.glob(os.path.join(HOME_DIR, "*"))
     project_names = [os.path.basename(x) for x in projects]
     frame_counts = [count_frames(x) for x in projects]
-    projs_w_frames = zip(projects, frame_counts)
+    projs_w_frames = zip(project_names, frame_counts)
     for x, y in projs_w_frames:
         print("Project:{}; Frames:{}".format(x, y))
     return
