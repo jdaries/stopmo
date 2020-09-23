@@ -155,7 +155,7 @@ def assemble_and_preview():
             prev_count = int(f_in.readlines()[0].strip())
         with open(frame_count_file, "w") as f_out:
             f_out.write(count_frames(PROJECT))
-        new_video_in = fmpeg.input(frame_range,
+        new_video_in = ffmpeg.input(frame_range,
                                    pattern_type='sequence',
                                    start_number=prev_count + 1,
                                    framerate=FRAME_RATE)
