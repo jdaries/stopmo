@@ -61,7 +61,7 @@ def preview_overlay(camera=None):
     font = ImageFont.truetype(os.path.join(FONT_DIR, "FreeSans.ttf"), 120)
 
     d = ImageDraw.Draw(txt)
-    frame_no = count_frames()
+    frame_no = count_frames(PROJECT)
     d.text((10, 10), frame_no, fill=(0, 0, 0), font=font)
 
     out = Image.alpha_composite(pad, txt)
@@ -84,11 +84,7 @@ def preview():
         return
     CAMERA.start_preview()
     frame_base_str = '{}/frame_{}.jpg'
-    if get_next_frame(offset=0) == frame_base_str.format(frames_dir,
-                                                         str(1).zfill(
-                                                                      PAD_WIDTH
-                                                                      )
-                                                         ):
+    if count_frames(PROJECT) == 0:
         return
     else:
         ghost_preview()
@@ -147,7 +143,7 @@ def assemble_and_preview():
     if not os.path.exists(output_fname):
         append_flag = False
         with open(frame_count_file, "w") as f_out:
-            f_out.write(count_frames())
+            f_out.write(count_frames(PROJECT))
         frame_range = '{}/frame_%0{}d.jpg'.format(frames_dir, PAD_WIDTH)
         video_in = ffmpeg.input(frame_range,
                                 pattern_type='sequence',
@@ -158,7 +154,7 @@ def assemble_and_preview():
         with open(frame_count_file, "r") as f_in:
             prev_count = int(f_in.readlines()[0].strip())
         with open(frame_count_file, "w") as f_out:
-            f_out.write(count_frames())
+            f_out.write(count_frames(PROJECT))
         new_video_in = fmpeg.input(frame_range,
                                    pattern_type='sequence',
                                    start_number=prev_count + 1,
@@ -183,7 +179,7 @@ def clear_project():
         os.remove(preview)
 
 
-def count_frames(proj=PROJECT):
+def count_frames(proj):
     tmp_frame_dir = "{}/{}/frames".format(HOME_DIR, proj)
     frames = glob.glob("{}/frame_*.jpg".format(tmp_frame_dir))
     if len(frames) == 0:
@@ -197,7 +193,7 @@ def count_frames(proj=PROJECT):
 
 def list_projects():
     projects = glob.glob("{}/*".format(HOME_DIR))
-    frame_counts = [count_frames(proj=x) for x in projects]
+    frame_counts = [count_frames(x) for x in projects]
     projs_w_frames = zip(projects, frame_counts)
     for x, y in projs_w_frames:
         print("Project:{}; Frames:{}".format(x, y))
