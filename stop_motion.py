@@ -141,16 +141,34 @@ def assemble_and_preview():
         print("assemble_and_preview button pushed")
         return
     stop()
+    frame_count_file = os.path.join(movie_dir, "preview_frame.txt")
     output_fname = '{m_dir}/{proj}_preview.mp4'.format(m_dir=movie_dir,
                                                        proj=PROJECT)
-    if os.path.exists(output_fname):
-        os.remove(output_fname)
-    video_in = ffmpeg.input('{}/frame_*.jpg'.format(frames_dir),
-                            pattern_type='glob',
-                            framerate=12)
-    video_out = ffmpeg.output(video_in, output_fname)
+    if not os.path.exists(output_fname):
+        append_flag = False
+        with open(frame_count_file, "w") as f_out:
+            f_out.write(count_frames())
+        frame_range = '{}/frame_%0{}d.jpg'.format(frames_dir, PAD_WIDTH)
+        video_in = ffmpeg.input(frame_range,
+                                pattern_type='sequence',
+                                framerate=FRAME_RATE)
+        video_out = ffmpeg.output(video_in, output_fname)
+    else:
+        append_flag = True
+        with open(frame_count_file, "r") as f_in:
+            prev_count = int(f_in.readlines()[0].strip())
+        with open(frame_count_file, "w") as f_out:
+            f_out.write(count_frames())
+        new_video_in = fmpeg.input(frame_range,
+                                   pattern_type='sequence',
+                                   start_number=prev_count + 1,
+                                   framerate=FRAME_RATE)
+        existing_preview = ffmpeg.input(output_fname)
+        new_preview_stream = ffmpeg.concat(existing_preview, new_video_in)
+        video_out = ffmpeg.output(new_preview_stream, output_fname)
     video_out.run()
     subprocess.call(['xdg-open', output_fname])
+    return
 
 
 def clear_project():
@@ -165,8 +183,9 @@ def clear_project():
         os.remove(preview)
 
 
-def count_frames():
-    frames = glob.glob("{}/frame_*.jpg".format(frames_dir))
+def count_frames(proj=PROJECT):
+    tmp_frame_dir = "{}/{}/frames".format(HOME_DIR, proj)
+    frames = glob.glob("{}/frame_*.jpg".format(tmp_frame_dir))
     if len(frames) == 0:
         return str(1).zfill(PAD_WIDTH)
     sequence = [int(os.path.basename(x).split(".")[0].split("_")[-1])
@@ -178,7 +197,7 @@ def count_frames():
 
 def list_projects():
     projects = glob.glob("{}/*".format(HOME_DIR))
-    frame_counts = [len(glob.glob("{}/{}/frames/frame_*.jpg".format(HOME_DIR, x))) for x in projects]
+    frame_counts = [count_frames(proj=x) for x in projects]
     projs_w_frames = zip(projects, frame_counts)
     for x, y in projs_w_frames:
         print("Project:{}; Frames:{}".format(x, y))
@@ -211,11 +230,15 @@ if __name__ == '__main__':
     parser.add_argument('--list_projects', '-ls',
                         action='store_true',
                         help="list current projects")
+    parser.add_argument('--frame_rate', '-f',
+                        type=int, default=12,
+                        help="specify frame rate for animations")
     args = parser.parse_args()
     debug_mode = args.debug_mode
     PROJECT = args.project_name
     clear_flag = args.clear_files
     list_flag = args.list_projects
+    FRAME_RATE = args.frame_rate
 
     frames_dir = "{}/{}/frames".format(HOME_DIR, PROJECT)
     movie_dir = "{}/{}/movie".format(HOME_DIR, PROJECT)
