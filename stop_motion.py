@@ -143,26 +143,26 @@ def assemble_and_preview():
                                'frame_%0{}d.jpg').format(PAD_WIDTH)
     if not os.path.exists(output_fname):
         append_flag = False
-        with open(frame_count_file, "w") as f_out:
-            f_out.write(count_frames(PROJECT))
         video_in = ffmpeg.input(frame_range,
                                 pattern_type='sequence',
                                 framerate=FRAME_RATE)
         video_out = ffmpeg.output(video_in, output_fname)
+        with open(frame_count_file, "w") as f_out:
+            f_out.write(count_frames(PROJECT))
     else:
         append_flag = True
         with open(frame_count_file, "r") as f_in:
             prev_count = int(f_in.readlines()[0].strip())
-        with open(frame_count_file, "w") as f_out:
-            f_out.write(count_frames(PROJECT))
         new_video_in = ffmpeg.input(frame_range,
-                                   pattern_type='sequence',
-                                   start_number=prev_count + 1,
-                                   framerate=FRAME_RATE)
+                                    pattern_type='sequence',
+                                    start_number=prev_count + 1,
+                                    framerate=FRAME_RATE)
         existing_preview = ffmpeg.input(output_fname)
         new_preview_stream = ffmpeg.concat(existing_preview, new_video_in)
         video_out = ffmpeg.output(new_preview_stream, output_fname)
-    video_out.run()
+        with open(frame_count_file, "w") as f_out:
+            f_out.write(count_frames(PROJECT))
+    video_out.run(overwrite_output=True)
     subprocess.call(['xdg-open', output_fname])
     return
 
