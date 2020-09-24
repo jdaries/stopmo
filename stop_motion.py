@@ -151,13 +151,15 @@ def assemble_and_preview():
             f_out.write(count_frames(PROJECT))
     else:
         append_flag = True
+        old_preview_fname = os.path.join(movie_dir, "old_preview.mp4")
+        os.rename(output_fname, old_preview_fname)
         with open(frame_count_file, "r") as f_in:
             prev_count = int(f_in.readlines()[0].strip())
         new_video_in = ffmpeg.input(frame_range,
                                     pattern_type='sequence',
                                     start_number=prev_count + 1,
                                     framerate=FRAME_RATE)
-        existing_preview = ffmpeg.input(output_fname)
+        existing_preview = ffmpeg.input(old_preview_fname)
         new_preview_stream = ffmpeg.concat(existing_preview, new_video_in)
         video_out = ffmpeg.output(new_preview_stream, output_fname)
         with open(frame_count_file, "w") as f_out:
