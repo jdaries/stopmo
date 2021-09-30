@@ -205,6 +205,7 @@ def movie_directory(proj):
 
 
 def main():
+    pygame.init()
     print("ok ready")
     while True:
         key = pygame.key.get_pressed()
