@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 import glob
 import os
 import sys
@@ -213,7 +213,7 @@ def main():
     keyboard.add_hotkey('p', assemble_and_preview)
     keyboard.add_hotkey('q', exit_button)
     keyboard.wait()
-    
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Stop Motion Pi")
