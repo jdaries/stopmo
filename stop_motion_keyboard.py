@@ -208,19 +208,20 @@ def main():
     pygame.init()
     print("ok ready")
     while True:
-        key = pygame.key.get_pressed()
-        if key[pygame.K_ESCAPE]:
-            stop()
-        elif key[pygame.K_RETURN]:
-            preview()
-        elif key[pygame.K_DELETE]: 
-            deleteframe_button()
-        elif key[pygame.K_SPACE]:
-            take_picture()
-        elif key[pygame.K_p]:
-            assemble_and_preview()
-        elif key[pygame.K_q]:
-            exit_button()
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    stop()
+                elif event.key == pygame.K_RETURN:
+                    preview()
+                elif event.key == pygame.K_DELETE: 
+                    deleteframe_button()
+                elif event.key == pygame.K_SPACE:
+                    take_picture()
+                elif event.key == pygame.K_p:
+                    assemble_and_preview()
+                elif event.key == pygame.K_q:
+                    exit_button()
 
 
 if __name__ == '__main__':
