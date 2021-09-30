@@ -6,7 +6,7 @@ import subprocess
 import argparse
 
 import ffmpeg
-import pygame
+import keyboard
 from picamera import PiCamera
 from PIL import Image, ImageDraw, ImageFont
 
@@ -205,25 +205,15 @@ def movie_directory(proj):
 
 
 def main():
-    pygame.init()
-    windowSurfaceObj = pygame.display.set_mode((640,480),1,16)
     print("ok ready")
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    stop()
-                elif event.key == pygame.K_RETURN:
-                    preview()
-                elif event.key == pygame.K_DELETE: 
-                    deleteframe_button()
-                elif event.key == pygame.K_SPACE:
-                    take_picture()
-                elif event.key == pygame.K_p:
-                    assemble_and_preview()
-                elif event.key == pygame.K_q:
-                    exit_button()
-
+    keyboard.add_hotkey('esc', stop)
+    keyboard.add_hotkey('return', preview)
+    keyboard.add_hotkey('delete', deleteframe_button)
+    keyboard.add_hotkey('space',take_picture)
+    keyboard.add_hotkey('p', assemble_and_preview)
+    keyboard.add_hotkey('q', exit_button)
+    keyboard.wait()
+    
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Stop Motion Pi")
