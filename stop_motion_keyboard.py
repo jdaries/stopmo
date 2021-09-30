@@ -206,6 +206,7 @@ def movie_directory(proj):
 
 def main():
     pygame.init()
+    windowSurfaceObj = pygame.display.set_mode((640,480),1,16)
     print("ok ready")
     while True:
         for event in pygame.event.get():
